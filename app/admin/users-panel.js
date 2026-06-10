@@ -37,6 +37,30 @@ export default function UsersPanel() {
     return <section className="notice error">{error}</section>;
   }
 
+  async function downloadCsv(userKey) {
+    const response = await fetch(`/api/admin/users/${encodeURIComponent(userKey)}/export`, {
+      headers: {
+        'x-admin-password': window.sessionStorage.getItem('riskdelta-admin-password') || ''
+      }
+    });
+
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      setError(payload.error || 'Could not export CSV.');
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${userKey}-annotation-rows.csv`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
   return (
     <section className="panel listPanel">
       <div className="listHeader users">
@@ -44,22 +68,23 @@ export default function UsersPanel() {
         <span>Password</span>
         <span>Progress</span>
         <span>Updated</span>
+        <span>Export</span>
       </div>
 
       {users.length === 0 ? <p className="emptyList muted">No uploaded user data yet.</p> : null}
 
       <div className="rowList">
         {users.map((user) => (
-          <Link
-            className="rowItem users"
-            href={`/annotate/${encodeURIComponent(user.user_key)}`}
-            key={user.user_key}
-            onClick={() => {
-              window.sessionStorage.setItem(`riskdelta-password:${user.user_key}`, user.password);
-            }}
-          >
+          <div className="rowItem users" key={user.user_key}>
             <span>
-              <strong>{user.user_key}</strong>
+              <Link
+                href={`/annotate/${encodeURIComponent(user.user_key)}`}
+                onClick={() => {
+                  window.sessionStorage.setItem(`riskdelta-password:${user.user_key}`, user.password);
+                }}
+              >
+                <strong>{user.user_key}</strong>
+              </Link>
               <small>{user.open} open rows</small>
             </span>
             <span>
@@ -70,7 +95,12 @@ export default function UsersPanel() {
               <small>{percentage(user.completed, user.total)} complete</small>
             </span>
             <span>{dateTime(user.last_updated_at)}</span>
-          </Link>
+            <span>
+              <button className="ghost compact" type="button" onClick={() => downloadCsv(user.user_key)}>
+                Download CSV
+              </button>
+            </span>
+          </div>
         ))}
       </div>
     </section>

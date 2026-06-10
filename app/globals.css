@@ -378,7 +378,7 @@ legend {
 
 .listHeader.users,
 .rowItem.users {
-  grid-template-columns: minmax(0, 1fr) 120px 120px minmax(150px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr) 120px 120px minmax(150px, 0.8fr) 140px;
 }
 
 .listHeader {
@@ -402,6 +402,11 @@ legend {
 .rowItem {
   border-bottom: 1px solid var(--line);
   padding: 13px 14px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.rowItem a {
   color: var(--text);
   text-decoration: none;
 }
