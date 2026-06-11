@@ -13,7 +13,8 @@ const labelDescriptions = {
   severity_decrease: 'The same risk becomes less severe, less likely, more limited, or less direct.',
   specificity_increase: 'New text adds concrete details such as lawsuits, fines, countries, dates, products, business lines, or consequences.',
   specificity_decrease: 'New text removes concrete details, replacing them with broader or less specific risk language.',
-  neutral_or_unclear: 'Meaning is unchanged, extraction is broken, pair is not comparable, or the label is too ambiguous.'
+  neutral: 'Meaning is unchanged between the old and new text.',
+  unclear: 'Extraction is broken, the pair is not comparable, or the label is too ambiguous.'
 };
 
 export default function AnnotationDetail({ userKey, candidateId }) {
@@ -110,7 +111,7 @@ export default function AnnotationDetail({ userKey, candidateId }) {
     save({
       goNext: true,
       overrides: {
-        primary_label: 'neutral_or_unclear',
+        primary_label: 'unclear',
         confidence: 'low',
         notes: form.notes || 'ambiguous'
       }

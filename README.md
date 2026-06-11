@@ -66,4 +66,5 @@ The current MVP label set is:
 - `severity_decrease`
 - `specificity_increase`
 - `specificity_decrease`
-- `neutral_or_unclear`
+- `neutral`
+- `unclear`

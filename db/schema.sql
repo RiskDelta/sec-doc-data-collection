@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS annotation_rows (
       'severity_decrease',
       'specificity_increase',
       'specificity_decrease',
-      'neutral_or_unclear'
+      'neutral',
+      'unclear'
     )
   ),
   secondary_label TEXT CHECK (
@@ -47,7 +48,8 @@ CREATE TABLE IF NOT EXISTS annotation_rows (
       'severity_decrease',
       'specificity_increase',
       'specificity_decrease',
-      'neutral_or_unclear'
+      'neutral',
+      'unclear'
     )
   ),
   rationale_old TEXT,
@@ -72,6 +74,14 @@ ALTER TABLE annotation_rows
   DROP CONSTRAINT IF EXISTS annotation_rows_primary_label_check,
   DROP CONSTRAINT IF EXISTS annotation_rows_secondary_label_check;
 
+UPDATE annotation_rows
+SET primary_label = 'neutral'
+WHERE primary_label = 'neutral_or_unclear';
+
+UPDATE annotation_rows
+SET secondary_label = 'neutral'
+WHERE secondary_label = 'neutral_or_unclear';
+
 ALTER TABLE annotation_rows
   ADD CONSTRAINT annotation_rows_primary_label_check CHECK (
     primary_label IS NULL OR primary_label IN (
@@ -82,7 +92,8 @@ ALTER TABLE annotation_rows
       'severity_decrease',
       'specificity_increase',
       'specificity_decrease',
-      'neutral_or_unclear'
+      'neutral',
+      'unclear'
     )
   ) NOT VALID,
   ADD CONSTRAINT annotation_rows_secondary_label_check CHECK (
@@ -94,7 +105,8 @@ ALTER TABLE annotation_rows
       'severity_decrease',
       'specificity_increase',
       'specificity_decrease',
-      'neutral_or_unclear'
+      'neutral',
+      'unclear'
     )
   ) NOT VALID;
 
