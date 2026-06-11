@@ -244,6 +244,7 @@ h2 {
   position: sticky;
   top: 14px;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   max-height: calc(100vh - 28px);
   overflow: hidden;
   padding: 0;
@@ -268,6 +269,8 @@ h2 {
 
 .sidebarList {
   display: grid;
+  align-content: start;
+  min-height: 0;
   overflow: auto;
 }
 
