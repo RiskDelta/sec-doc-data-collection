@@ -63,5 +63,7 @@ The current MVP label set is:
 - `removal`
 - `actualization`
 - `severity_increase`
+- `severity_decrease`
 - `specificity_increase`
+- `specificity_decrease`
 - `neutral_or_unclear`

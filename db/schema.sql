@@ -26,8 +26,30 @@ CREATE TABLE IF NOT EXISTS annotation_rows (
   old_text TEXT,
   new_text TEXT,
   source_payload JSONB NOT NULL DEFAULT '{}'::jsonb,
-  primary_label TEXT,
-  secondary_label TEXT,
+  primary_label TEXT CHECK (
+    primary_label IS NULL OR primary_label IN (
+      'addition',
+      'removal',
+      'actualization',
+      'severity_increase',
+      'severity_decrease',
+      'specificity_increase',
+      'specificity_decrease',
+      'neutral_or_unclear'
+    )
+  ),
+  secondary_label TEXT CHECK (
+    secondary_label IS NULL OR secondary_label IN (
+      'addition',
+      'removal',
+      'actualization',
+      'severity_increase',
+      'severity_decrease',
+      'specificity_increase',
+      'specificity_decrease',
+      'neutral_or_unclear'
+    )
+  ),
   rationale_old TEXT,
   rationale_new TEXT,
   confidence TEXT,
@@ -45,6 +67,36 @@ ALTER TABLE annotation_rows
 
 ALTER TABLE annotation_rows
   ADD COLUMN IF NOT EXISTS completed BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE annotation_rows
+  DROP CONSTRAINT IF EXISTS annotation_rows_primary_label_check,
+  DROP CONSTRAINT IF EXISTS annotation_rows_secondary_label_check;
+
+ALTER TABLE annotation_rows
+  ADD CONSTRAINT annotation_rows_primary_label_check CHECK (
+    primary_label IS NULL OR primary_label IN (
+      'addition',
+      'removal',
+      'actualization',
+      'severity_increase',
+      'severity_decrease',
+      'specificity_increase',
+      'specificity_decrease',
+      'neutral_or_unclear'
+    )
+  ) NOT VALID,
+  ADD CONSTRAINT annotation_rows_secondary_label_check CHECK (
+    secondary_label IS NULL OR secondary_label IN (
+      'addition',
+      'removal',
+      'actualization',
+      'severity_increase',
+      'severity_decrease',
+      'specificity_increase',
+      'specificity_decrease',
+      'neutral_or_unclear'
+    )
+  ) NOT VALID;
 
 UPDATE annotation_rows
 SET completed = completed_at IS NOT NULL

@@ -10,7 +10,9 @@ const labelDescriptions = {
   removal: 'Old text contains a risk and new text is empty or no longer has a real match.',
   actualization: 'A risk moves from possible or hypothetical to realized or active.',
   severity_increase: 'The same risk becomes more severe, more likely, or more direct.',
+  severity_decrease: 'The same risk becomes less severe, less likely, more limited, or less direct.',
   specificity_increase: 'New text adds concrete details such as lawsuits, fines, countries, dates, products, business lines, or consequences.',
+  specificity_decrease: 'New text removes concrete details, replacing them with broader or less specific risk language.',
   neutral_or_unclear: 'Meaning is unchanged, extraction is broken, pair is not comparable, or the label is too ambiguous.'
 };
 
