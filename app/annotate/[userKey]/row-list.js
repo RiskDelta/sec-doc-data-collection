@@ -1,10 +1,20 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+const statusOptions = [
+  { value: 'all', label: 'All' },
+  { value: 'open', label: 'Open' },
+  { value: 'completed', label: 'Completed' }
+];
+
 export default function RowList({ userKey }) {
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = parsePage(searchParams.get('page'));
+  const status = parseStatus(searchParams.get('status'));
   const [payload, setPayload] = useState({ rows: [], total: 0, total_pages: 1 });
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -13,10 +23,10 @@ export default function RowList({ userKey }) {
   const percentDone = progress.total ? Math.round(((progress.completed || 0) / progress.total) * 100) : 0;
 
   useEffect(() => {
-    loadPage(page);
-  }, [page, userKey]);
+    loadPage(page, status);
+  }, [page, status, userKey]);
 
-  async function loadPage(nextPage) {
+  async function loadPage(nextPage, nextStatus) {
     const password = window.sessionStorage.getItem(`riskdelta-password:${userKey}`);
     if (!password) {
       window.location.href = '/';
@@ -25,8 +35,12 @@ export default function RowList({ userKey }) {
 
     setLoading(true);
     setError('');
+    const query = new URLSearchParams({
+      page: String(nextPage),
+      status: nextStatus
+    });
     const [rowsResponse, progressResponse] = await Promise.all([
-      fetch(`/api/users/${encodeURIComponent(userKey)}/rows?page=${nextPage}`, {
+      fetch(`/api/users/${encodeURIComponent(userKey)}/rows?${query.toString()}`, {
         headers: { 'x-user-password': password }
       }),
       fetch(`/api/users/${encodeURIComponent(userKey)}/progress`, {
@@ -45,6 +59,16 @@ export default function RowList({ userKey }) {
 
     setPayload(rowsPayload);
     setProgress(progressPayload);
+  }
+
+  function updateQuery(nextValues) {
+    const nextPage = nextValues.page || page;
+    const nextStatus = nextValues.status || status;
+    const query = new URLSearchParams({
+      page: String(nextPage),
+      status: nextStatus
+    });
+    router.replace(`/annotate/${encodeURIComponent(userKey)}?${query.toString()}`);
   }
 
   return (
@@ -80,6 +104,26 @@ export default function RowList({ userKey }) {
         </div>
       </section>
 
+      <section className="toolbar panel">
+        <label>
+          Status
+          <select
+            value={status}
+            onChange={(event) => updateQuery({ page: 1, status: event.target.value })}
+          >
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="toolbarMeta">
+          <strong>{payload.total || 0}</strong>
+          <span>{status === 'all' ? 'rows' : `${status} rows`}</span>
+        </div>
+      </section>
+
       <section className="panel listPanel">
         <div className="listHeader">
           <span>Candidate</span>
@@ -97,7 +141,7 @@ export default function RowList({ userKey }) {
           {payload.rows.map((row) => (
             <Link
               className="rowItem"
-              href={`/annotate/${encodeURIComponent(userKey)}/${encodeURIComponent(row.candidate_id)}`}
+              href={`/annotate/${encodeURIComponent(userKey)}/${encodeURIComponent(row.candidate_id)}?page=${payload.page || page}&status=${status}`}
               key={row.candidate_id}
             >
               <span>
@@ -120,7 +164,7 @@ export default function RowList({ userKey }) {
         <button
           className="ghost"
           disabled={page <= 1 || loading}
-          onClick={() => setPage((current) => Math.max(current - 1, 1))}
+          onClick={() => updateQuery({ page: Math.max(page - 1, 1) })}
         >
           Previous
         </button>
@@ -128,13 +172,22 @@ export default function RowList({ userKey }) {
         <button
           className="ghost"
           disabled={page >= (payload.total_pages || 1) || loading}
-          onClick={() => setPage((current) => current + 1)}
+          onClick={() => updateQuery({ page: page + 1 })}
         >
           Next
         </button>
       </nav>
     </main>
   );
+}
+
+function parsePage(value) {
+  const page = Number(value || 1);
+  return Number.isFinite(page) ? Math.max(Math.floor(page), 1) : 1;
+}
+
+function parseStatus(value) {
+  return statusOptions.some((option) => option.value === value) ? value : 'all';
 }
 
 function formatNumber(value) {

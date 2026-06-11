@@ -201,6 +201,123 @@ h2 {
   font-size: 0.82rem;
 }
 
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.toolbar label {
+  width: min(260px, 100%);
+}
+
+.toolbarMeta {
+  display: grid;
+  justify-items: end;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.toolbarMeta strong {
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+.detailShell {
+  width: min(1440px, 100%);
+}
+
+.detailLayout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.detailMain {
+  min-width: 0;
+}
+
+.navSidebar {
+  position: sticky;
+  top: 14px;
+  display: grid;
+  max-height: calc(100vh - 28px);
+  overflow: hidden;
+  padding: 0;
+}
+
+.sidebarHeader {
+  display: grid;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  padding: 14px;
+}
+
+.sidebarHeader h2,
+.sidebarHeader p {
+  margin-bottom: 0;
+}
+
+.sidebarHeader p {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.sidebarList {
+  display: grid;
+  overflow: auto;
+}
+
+.sidebarItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 11px 14px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.sidebarItem:hover,
+.sidebarItem.active {
+  background: #fbfbfa;
+}
+
+.sidebarItem.active {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.sidebarItem strong,
+.sidebarItem small {
+  display: block;
+}
+
+.sidebarItem strong {
+  overflow-wrap: anywhere;
+}
+
+.sidebarItem small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.sidebarPager {
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  margin-top: 0;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+}
+
+.sidebarPager button {
+  padding: 8px 10px;
+}
+
 .textGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -514,8 +631,27 @@ a {
 
   .textGrid,
   .rowFields,
-  .adminGrid {
+  .adminGrid,
+  .detailLayout {
     grid-template-columns: 1fr;
+  }
+
+  .navSidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .toolbar label {
+    width: 100%;
+  }
+
+  .toolbarMeta {
+    justify-items: start;
   }
 
   .speedometer {
