@@ -9,25 +9,28 @@ export default function UsersPanel() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    async function loadUsers() {
-      const response = await fetch('/api/admin/users', {
-        headers: {
-          'x-admin-password': window.sessionStorage.getItem('riskdelta-admin-password') || ''
-        }
-      });
-      const payload = await response.json();
-      setLoading(false);
+    loadUsers();
+    window.addEventListener('riskdelta-users-updated', loadUsers);
+    return () => window.removeEventListener('riskdelta-users-updated', loadUsers);
+  }, []);
 
-      if (!response.ok) {
-        setError(payload.error || 'Could not load users.');
-        return;
+  async function loadUsers() {
+    const response = await fetch('/api/admin/users', {
+      headers: {
+        'x-admin-password': window.sessionStorage.getItem('riskdelta-admin-password') || ''
       }
+    });
+    const payload = await response.json();
+    setLoading(false);
 
-      setUsers(payload.users || []);
+    if (!response.ok) {
+      setError(payload.error || 'Could not load users.');
+      return;
     }
 
-    loadUsers();
-  }, []);
+    setError('');
+    setUsers(payload.users || []);
+  }
 
   if (loading) {
     return <section className="panel muted">Loading users...</section>;

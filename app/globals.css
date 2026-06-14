@@ -618,6 +618,80 @@ button.compact {
   gap: 8px;
 }
 
+.segmentedField legend {
+  margin-bottom: 6px;
+}
+
+.segmentedControl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.segmentedControl label {
+  display: block;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.segmentedControl label + label {
+  border-left: 1px solid var(--line);
+}
+
+.segmentedControl input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmentedControl span {
+  display: grid;
+  min-height: 42px;
+  place-items: center;
+  padding: 9px 10px;
+  text-align: center;
+}
+
+.segmentedControl input:checked + span {
+  background: #e8f2ef;
+  color: var(--accent-dark);
+  font-weight: 750;
+}
+
+.segmentedControl .disabled span {
+  color: var(--muted);
+  background: #fbfbfa;
+}
+
+.accountSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.accountSummary span {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: #fbfbfa;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.accountSummary strong {
+  display: block;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.fieldNote {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
 a {
   color: var(--accent-dark);
 }
@@ -696,6 +770,10 @@ a {
   }
 
   .inlineField {
+    grid-template-columns: 1fr;
+  }
+
+  .accountSummary {
     grid-template-columns: 1fr;
   }
 
