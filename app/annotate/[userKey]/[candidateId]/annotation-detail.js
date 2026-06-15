@@ -201,6 +201,9 @@ export default function AnnotationDetail({ userKey, candidateId }) {
     });
   }
 
+  const oldTextEmpty = !row?.old_text?.trim();
+  const newTextEmpty = !row?.new_text?.trim();
+
   return (
     <main className="shell detailShell">
       <header className="topbar">
@@ -294,11 +297,25 @@ export default function AnnotationDetail({ userKey, candidateId }) {
 
             <section className="textGrid">
               <article className="textPane">
-                <h2>Old text</h2>
+                <div className="textPaneHeader">
+                  <h2>Old text</h2>
+                  {oldTextEmpty ? (
+                    <button type="button" className="ghost" disabled={saving} onClick={markNoOld}>
+                      No Old and Next
+                    </button>
+                  ) : null}
+                </div>
                 <p>{row.old_text || '[empty]'}</p>
               </article>
               <article className="textPane">
-                <h2>New text</h2>
+                <div className="textPaneHeader">
+                  <h2>New text</h2>
+                  {newTextEmpty ? (
+                    <button type="button" className="ghost" disabled={saving} onClick={markNoNew}>
+                      No New and Next
+                    </button>
+                  ) : null}
+                </div>
                 <p>{row.new_text || '[empty]'}</p>
               </article>
             </section>
@@ -395,12 +412,6 @@ export default function AnnotationDetail({ userKey, candidateId }) {
               <div className="actions">
                 <button type="button" className="ghost" disabled={saving} onClick={markUnclear}>
                   Mark unclear and next
-                </button>
-                <button type="button" className="ghost" disabled={saving} onClick={markNoOld}>
-                  No Old and Next
-                </button>
-                <button type="button" className="ghost" disabled={saving} onClick={markNoNew}>
-                  No New and Next
                 </button>
                 <button disabled={saving} type="submit">
                   {saving ? 'Saving...' : 'Save'}

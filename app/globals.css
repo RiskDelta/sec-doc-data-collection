@@ -334,6 +334,22 @@ h2 {
   padding: 14px;
 }
 
+.textPaneHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.textPaneHeader h2 {
+  margin-bottom: 0;
+}
+
+.textPaneHeader button {
+  flex: 0 0 auto;
+}
+
 .textPane p {
   margin-bottom: 0;
   max-width: 100%;
