@@ -173,6 +173,34 @@ export default function AnnotationDetail({ userKey, candidateId }) {
     });
   }
 
+  function markNoOld() {
+    save({
+      goNext: true,
+      overrides: {
+        primary_label: 'addition',
+        secondary_label: '',
+        rationale_old: '',
+        rationale_new: row?.new_text || '',
+        confidence: 'high',
+        notes: 'no old text'
+      }
+    });
+  }
+
+  function markNoNew() {
+    save({
+      goNext: true,
+      overrides: {
+        primary_label: 'removal',
+        secondary_label: '',
+        rationale_old: row?.old_text || '',
+        rationale_new: '',
+        confidence: 'high',
+        notes: 'no new text'
+      }
+    });
+  }
+
   return (
     <main className="shell detailShell">
       <header className="topbar">
@@ -367,6 +395,12 @@ export default function AnnotationDetail({ userKey, candidateId }) {
               <div className="actions">
                 <button type="button" className="ghost" disabled={saving} onClick={markUnclear}>
                   Mark unclear and next
+                </button>
+                <button type="button" className="ghost" disabled={saving} onClick={markNoOld}>
+                  No Old and Next
+                </button>
+                <button type="button" className="ghost" disabled={saving} onClick={markNoNew}>
+                  No New and Next
                 </button>
                 <button disabled={saving} type="submit">
                   {saving ? 'Saving...' : 'Save'}
